@@ -271,22 +271,20 @@
 
   // --- Init ---
 
+  let initialized = false;
+
   function init() {
-    // Only activate on game pages
-    if (!document.querySelector('.cg-wrap')) {
-      // Retry — board may not be loaded yet
-      setTimeout(init, 1000);
-      return;
-    }
+    if (initialized) return;
+    if (!document.querySelector('cg-board')) return;
+
+    initialized = true;
     const inputBox = createInputBox();
-    // Auto-focus the voice input so Superwhisper types into it
     inputBox.focus();
     console.log('[Voice Move] Lichess Voice to Move loaded');
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  // Keep checking for the board — Lichess is a SPA and loads content dynamically
+  const observer = new MutationObserver(init);
+  observer.observe(document.body, { childList: true, subtree: true });
+  init();
 })();
