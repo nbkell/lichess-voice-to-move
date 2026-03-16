@@ -271,20 +271,12 @@
 
   // --- Init ---
 
-  let initialized = false;
-
-  function init() {
-    if (initialized) return;
+  const waitForBoard = setInterval(() => {
     if (!document.querySelector('cg-board')) return;
-
-    initialized = true;
+    if (document.getElementById('voice-move-container')) return;
+    clearInterval(waitForBoard);
     const inputBox = createInputBox();
     inputBox.focus();
     console.log('[Voice Move] Lichess Voice to Move loaded');
-  }
-
-  // Keep checking for the board — Lichess is a SPA and loads content dynamically
-  const observer = new MutationObserver(init);
-  observer.observe(document.body, { childList: true, subtree: true });
-  init();
+  }, 500);
 })();
